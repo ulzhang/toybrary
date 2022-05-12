@@ -1,0 +1,124 @@
+{% extends 'admin/model/list.html' %}
+
+{% block body %}
+    <div class="container text-center">
+        <img src="/static/images/checkin_out_pic.png" class="img-fluid" style="max-width:25%">
+    </div>
+	{{ super() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.get("/update");
+        });
+        
+    </script>
+{% endblock body %}
+
+{% block list_row_actions %}
+	<a href="{{ get_url('.details_view', id=admin_view.get_pk_value(row)) }}"><span class="glyphicon glyphicon-zoom-in" style="color: black" title="More Details"></span></a>
+	{{ super() }}
+{% endblock list_row_actions %}
+
+{% block model_menu_bar %}
+    <ul class="nav nav-tabs actions-nav">
+        <li class="active">
+            <a href="javascript:void(0)">{{ _gettext('List') }}{% if count %} ({{ count }}){% endif %}</a>
+        </li>
+
+        {% if actions %}
+            {% set temp = actions[0] %}
+            <li>
+                <a href="javascript:void(0)" onclick="return modelActions.execute('{{ temp[0] }}');" title="Check-in toy">{{ _gettext(temp[1]) }}</a>
+            </li>
+        {% endif %}
+
+        {% if admin_view.can_create %}
+        <li>
+          {%- if admin_view.create_modal -%}
+            {{ lib.add_modal_button(url=get_url('.create_view', url=return_url, modal=True), title=_gettext('Create New Record'), content=_gettext('Create')) }}
+          {% else %}
+            <a href="{{ get_url('.create_view', url=return_url) }}" title="{{ _gettext('Checkout toy') }}">{{ _gettext('Checkout') }}</a>
+          {%- endif -%}
+        </li>
+        {% endif %}
+
+        {% if actions %}
+            {% set temp = actions[2] %}
+            <li>
+                <a href="javascript:void(0)" onclick="return modelActions.execute('{{ temp[0] }}');" title="Renew toy">{{ _gettext(temp[1]) }}</a>
+            </li>
+        {% endif %}
+
+        {% if filters %}
+        <li class="dropdown">
+            {{ model_layout.filter_options() }}
+        </li>
+        {% endif %}
+
+        {% if admin_view.can_export %}
+            {{ model_layout.export_options() }}
+        {% endif %}
+
+        {% block model_menu_bar_before_filters %}{% endblock %}
+
+        {% if can_set_page_size %}
+        <li class="dropdown">
+            {{ model_layout.page_size_form(page_size_url) }}
+        </li>
+        {% endif %}
+
+        {% if actions %}
+            {% set temp = actions[1] %}
+            <li>
+                <a href="javascript:void(0)" onclick="return modelActions.execute('{{ temp[0] }}');" title="Delete rental record">{{ _gettext(temp[1]) }}</a>
+            </li>
+        {% endif %}
+
+        {% if search_supported %}
+        <li>
+            {{ model_layout.search_form() }}
+        </li>
+        {% endif %}
+        {% block model_menu_bar_after_filters %}{% endblock %}
+    </ul>
+{% endblock %}
+
+{% block list_row %}
+    {% if actions %}
+    <td>
+        <input type="checkbox" name="rowid" class="action-checkbox" value="{{ get_pk_value(row) }}" title="{{ _gettext('Select record') }}" />
+    </td>
+    {% endif %}
+    {% block list_row_actions_column %}
+        {{ super() }}
+    {% endblock list_row_actions_column %}
+    {% for c, name in list_columns %}
+        {% if row.late and not row.checkin_date %}
+            <td class="col-{{c}} danger table-danger">
+                {% if admin_view.is_editable(c) %}
+                    {% set form = list_forms[get_pk_value(row)] %}
+                    {% if form.csrf_token %}
+                        {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c), csrf=form.csrf_token._value()) }}
+                    {% else %}
+                        {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c)) }}
+                    {% endif %}
+                {% else %}
+                    {{ get_value(row, c) }}
+                {% endif %}
+            </td>
+        {% else %}
+            <td class="col-{{c}}">
+                {% if admin_view.is_editable(c) %}
+                    {% set form = list_forms[get_pk_value(row)] %}
+                    {% if form.csrf_token %}
+                        {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c), csrf=form.csrf_token._value()) }}
+                    {% else %}
+                        {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c)) }}
+                    {% endif %}
+                {% else %}
+                    {{ get_value(row, c) }}
+                {% endif %}
+            </td>
+        {% endif %}
+    {% endfor %}
+{% endblock list_row %}

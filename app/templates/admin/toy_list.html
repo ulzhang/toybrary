@@ -1,0 +1,64 @@
+{% extends 'admin/model/list.html' %}
+
+{% block body %}
+    <div class="container text-center">
+        <img src="/static/images/toy_pic.png" class="img-fluid" style="max-width:30%">
+    </div>
+	{{ super() }}
+{% endblock body %}
+
+{% block list_row_actions %}
+	<a href="{{ get_url('.details_view', id=admin_view.get_pk_value(row)) }}"><span class="glyphicon glyphicon-zoom-in" style="color: black" title="More Details"></span></a>
+	{{ super() }}
+{% endblock list_row_actions %}
+
+{% block model_menu_bar %}
+    <ul class="nav nav-tabs actions-nav">
+        <li class="active">
+            <a href="javascript:void(0)">{{ _gettext('List') }}{% if count %} ({{ count }}){% endif %}</a>
+        </li>
+
+        {% if admin_view.can_create %}
+        <li>
+          {%- if admin_view.create_modal -%}
+            {{ lib.add_modal_button(url=get_url('.create_view', url=return_url, modal=True), title=_gettext('Create New Record'), content=_gettext('Create')) }}
+          {% else %}
+            <a href="{{ get_url('.create_view', url=return_url) }}" title="{{ _gettext('Add new' ~ admin_view.name ~ '') }}">{{ _gettext('Add ' ~ admin_view.name ~ '') }}</a>
+          {%- endif -%}
+        </li>
+        {% endif %}
+
+        {% if filters %}
+        <li class="dropdown">
+            {{ model_layout.filter_options() }}
+        </li>
+        {% endif %}
+
+        {% if admin_view.can_export %}
+            {{ model_layout.export_options() }}
+        {% endif %}
+
+        {% block model_menu_bar_before_filters %}{% endblock %}
+
+        {% if can_set_page_size %}
+        <li class="dropdown">
+            {{ model_layout.page_size_form(page_size_url) }}
+        </li>
+        {% endif %}
+
+        {% if actions %}
+        	{% for action in actions %}
+            <li>
+                <a href="javascript:void(0)" onclick="return modelActions.execute('{{ action[0] }}');" title="Delete customer">{{ _gettext(action[1]) }}</a>
+            </li>
+            {% endfor %}
+        {% endif %}
+
+        {% if search_supported %}
+        <li>
+            {{ model_layout.search_form() }}
+        </li>
+        {% endif %}
+        {% block model_menu_bar_after_filters %}{% endblock %}
+    </ul>
+{% endblock %}

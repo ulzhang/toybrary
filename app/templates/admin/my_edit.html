@@ -1,0 +1,23 @@
+{% extends 'admin/model/edit.html' %}
+
+{% block body %}
+
+	{% block navlinks %}
+		<ul class="nav nav-tabs">
+			<li>
+				<a href="{{ return_url }}">{{ _gettext('List') }}</a>
+			</li>
+			<li class="active">
+				<a href="javascript:void(0)">{{ _gettext('Edit') }}</a>
+			</li>
+			<li>
+				<a href="{{ get_url('.details_view', id=request.args.get('id')) }}">{{ _gettext('Details') }}</a>
+			</li>
+		</ul>
+	{% endblock navlinks %}
+
+	{% block edit_form %}
+		{{ super() }}
+	{% endblock edit_form %}
+
+{% endblock body %}

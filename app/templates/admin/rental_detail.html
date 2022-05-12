@@ -1,0 +1,46 @@
+{% extends 'admin/model/details.html' %}
+
+{% block body %}
+	{% block navlinks %}
+		<ul class="nav nav-tabs">
+			<li>
+				<a href="{{ get_url('.index_view') }}">{{ _gettext('List') }}</a>
+			</li>
+			<!-- {%- if admin_view.can_create -%}
+			<li>
+				<a href="{{ get_url('.create_view', url=return_url) }}">{{ _gettext('Create') }}</a>
+			</li>
+			{%- endif -%} -->
+			{%- if admin_view.can_edit -%}
+			<li>
+				<a href="{{ get_url('.edit_view', id=model.id) }}">{{ _gettext('Edit') }}</a>
+			</li>
+			{%- endif -%}
+			<li class="active">
+				<a href="javascript:void(0)">{{ _gettext('Details') }}</a>
+			</li>
+		</ul>
+	{% endblock navlinks%}
+
+	<!-- {% block details_search %}
+		<div class="input-group fa_filter_container col-lg-6">
+			<span class="input-group-addon">{{ _gettext('Filter') }}</span>
+			<input id="fa_filter" type="text" class="form-control">
+		</div>
+	{% endblock details_search %} -->
+
+	<h3>{{ member.name }} - {{ member.email}} | {{ toy.name }}</h3>
+	<dl class="dl-horizontal">
+		{% for key in data_table[0] %}
+			<dt>{{ key }}</dt>
+			<dd>{{ data_table[1][key] }}</dd>
+		{% endfor %}
+		<dt>{{ _gettext('Late') }}</dt>
+		<dd>
+			{% if late %}
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+			{% endif %}
+		</dd>
+
+	</dl>
+{% endblock body %}

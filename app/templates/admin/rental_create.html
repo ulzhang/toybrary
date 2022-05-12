@@ -1,0 +1,16 @@
+{% extends 'admin/model/create.html' %}
+
+{% block body %}
+	{{ super() }}
+{% endblock body %}
+
+{% block navlinks %}
+  <ul class="nav nav-tabs">
+    <li>
+        <a href="{{ return_url }}">{{ _gettext('List') }}</a>
+    </li>
+    <li class="active">
+        <a href="javascript:void(0)">{{ _gettext('Checkout') }}</a>
+    </li>
+  </ul>
+{% endblock navlinks %}

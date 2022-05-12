@@ -1,0 +1,8 @@
+env/
+.DS_Store
+*/.DS-Store
+*.pyc
+/*.pycsendgrid.env
+
+# Personal Access Token for Github
+# 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

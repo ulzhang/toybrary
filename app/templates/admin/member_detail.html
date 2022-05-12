@@ -1,0 +1,75 @@
+{% extends 'admin/model/details.html' %}
+
+{% block body %}
+	{% block navlinks %}
+		<ul class="nav nav-tabs">
+			<li>
+				<a href="{{ get_url('.index_view') }}">{{ _gettext('List') }}</a>
+			</li>
+			<!-- {%- if admin_view.can_create -%}
+			<li>
+				<a href="{{ get_url('.create_view', url=return_url) }}">{{ _gettext('Create') }}</a>
+			</li>
+			{%- endif -%} -->
+			{%- if admin_view.can_edit -%}
+			<li>
+				<a href="{{ get_url('.edit_view', id=model.id) }}">{{ _gettext('Edit') }}</a>
+			</li>
+			{%- endif -%}
+			<li class="active">
+				<a href="javascript:void(0)">{{ _gettext('Details') }}</a>
+			</li>
+		</ul>
+	{% endblock navlinks%}
+
+	<h3>{{ name }}</h3>
+	<dl class="dl-horizontal">
+		{% for key in data_table[0] %}
+			<dt>{{ key }}</dt>
+			<dd>{{ data_table[1][key] }}</dd>
+		{% endfor %}
+		<dt>{{ _gettext('Free') }}</dt>
+		<dd>
+			{% if free %}
+				<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+			{% endif %}
+		</dd>
+	</dl>
+
+	<!-- {% block details_search %}
+		<div class="input-group fa_filter_container col-lg-6">
+			<span class="input-group-addon">{{ _gettext('Filter') }}</span>
+			<input id="fa_filter" type="text" class="form-control">
+		</div>
+	{% endblock details_search %} -->
+
+	<h3>{{ _gettext('Rentals') }}</h3>
+	<div class="table-responsive">
+		<table class="table table-striped table-bordered table-hover searchable">
+			<thead>
+				<tr>
+					{% for header in rentals[0] %}
+						<th class="column-header col-md-3">
+							{% if sort[0] == rentals[0].index(header) %}
+								{% if sort[1] %}
+									<a href="{{ get_url('.details_view', id=model.id, sort=rentals[0].index(header), desc=0) }}">{{ header }} <span class="fa fa-chevron-up glyphicon glyphicon-chevron-up"></span></a>
+								{% else %}
+									<a href="{{ get_url('.details_view', id=model.id, sort=rentals[0].index(header), desc=1) }}">{{ header }} <span class="fa fa-chevron-down glyphicon glyphicon-chevron-down"></span></a>
+								{% endif %}
+							{% else %}
+								<a href="{{ get_url('.details_view', id=model.id, sort=rentals[0].index(header), desc=1) }}">{{ header }}</a>
+							{% endif %}
+						</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			{% for row in rentals[1] %}
+				<tr>
+					<td>{{ row[1][0] }}</td>
+					<td>{{ row[1][1] }}</td>
+					<td>{{ row[1][2] }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+{% endblock body %}
